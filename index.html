@@ -524,6 +524,15 @@
       border-top: 3px solid var(--brown);
       padding-bottom: env(safe-area-inset-bottom);
     }
+    #tabbar::after {   /* 휴대폰 브라우저가 탭 아래에 남기는 빈 띠를 같은 색으로 채움 */
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 140px;
+      background: var(--blue-d);
+    }
     #tabbar button {
       flex: 1;
       display: flex;
