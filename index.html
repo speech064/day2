@@ -798,6 +798,7 @@
     <p class="agent-fake">※ 지금 답변은 미리 정해 둔 가짜 답이에요.</p>
   </section>
 
+  <script src="faq.js"></script>
   <script>
     // 💬 에이전트 채팅: 버튼을 누르면 열린다. 답은 미리 정해 둔 츤데레 대사(가짜 답)다.
     // t = 말투 종류. 같은 말투가 연달아 나오지 않게, 안 쓴 대사를 먼저 고른다.
@@ -861,7 +862,21 @@
         return r.s;
       }
 
+      // faq.js 에서 질문과 가장 많이 겹치는 항목을 찾는다 (비슷한 질문이면 같은 답)
+      function findFaq(text) {
+        var t = text.toLowerCase().replace(/\s+/g, '');
+        var best = null, bestScore = 0;
+        (window.FAQ || []).forEach(function (e) {
+          var s = 0;
+          e.keys.forEach(function (k) { if (t.indexOf(k.replace(/\s+/g, '')) > -1) s++; });
+          if (s > bestScore) { bestScore = s; best = e; }
+        });
+        return best;
+      }
+
       function reply(text) {
+        var faq = findFaq(text);
+        if (faq) { lastTone = 'faq'; return faq.a; }
         for (var i = 0; i < TOPICS.length; i++) {
           if (TOPICS[i].re.test(text)) return pick(TOPICS[i].list, ANY);
         }
