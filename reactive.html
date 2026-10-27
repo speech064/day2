@@ -95,6 +95,19 @@
       border-radius: 14px;
     }
     .card .icon { font-size: 2.2rem; line-height: 1.2; }
+    /* 사진 칸: 사진을 불러오기 전(또는 실패 시)에는 이모지가 보인다 */
+    .thumb {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 4 / 3;
+      margin: -6px -6px 10px;
+      overflow: hidden;
+      background: #eef2f8;
+      border-radius: 10px;
+    }
+    .thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .credit { margin-top: 16px; font-size: 0.8rem; color: var(--muted); }
+    .credit a { color: inherit; }
     .card h3 { margin: 6px 0 4px; font-size: 1.05rem; }
     .card p { margin: 0; color: var(--muted); font-size: 0.92rem; }
     .tag {
@@ -216,10 +229,10 @@
       <h1>🍽️ 음식</h1>
       <p class="lead">오늘 뭐 먹을지 고민될 때 보는 메뉴 모음입니다.</p>
       <div class="grid">
-        <div class="card"><div class="icon">🍲</div><h3>한식</h3><p>김치찌개, 비빔밥, 불고기처럼 든든한 한 끼.</p><span class="tag">점심 추천</span></div>
-        <div class="card"><div class="icon">🍝</div><h3>양식</h3><p>파스타와 스테이크로 즐기는 분위기 있는 식사.</p><span class="tag">저녁 추천</span></div>
-        <div class="card"><div class="icon">🍣</div><h3>일식</h3><p>초밥, 우동, 돈카츠 등 깔끔한 맛.</p><span class="tag">인기</span></div>
-        <div class="card"><div class="icon">🧋</div><h3>카페·디저트</h3><p>커피와 케이크로 쉬어 가는 시간.</p><span class="tag">간식</span></div>
+        <div class="card" data-q="korean food"><div class="thumb"><span class="icon">🍲</span></div><h3>한식</h3><p>김치찌개, 비빔밥, 불고기처럼 든든한 한 끼.</p><span class="tag">점심 추천</span></div>
+        <div class="card" data-q="pasta"><div class="thumb"><span class="icon">🍝</span></div><h3>양식</h3><p>파스타와 스테이크로 즐기는 분위기 있는 식사.</p><span class="tag">저녁 추천</span></div>
+        <div class="card" data-q="sushi"><div class="thumb"><span class="icon">🍣</span></div><h3>일식</h3><p>초밥, 우동, 돈카츠 등 깔끔한 맛.</p><span class="tag">인기</span></div>
+        <div class="card" data-q="cafe dessert"><div class="thumb"><span class="icon">🧋</span></div><h3>카페·디저트</h3><p>커피와 케이크로 쉬어 가는 시간.</p><span class="tag">간식</span></div>
       </div>
     </section>
 
@@ -227,10 +240,10 @@
       <h1>🛋️ 가구</h1>
       <p class="lead">공간별로 골라 보는 가구 카테고리입니다.</p>
       <div class="grid">
-        <div class="card"><div class="icon">🛋️</div><h3>소파·거실</h3><p>가족이 모이는 거실을 편안하게 채워 줘요.</p><span class="tag">거실</span></div>
-        <div class="card"><div class="icon">🛏️</div><h3>침대·침실</h3><p>숙면을 위한 침대와 수납 가구.</p><span class="tag">침실</span></div>
-        <div class="card"><div class="icon">🪑</div><h3>책상·의자</h3><p>재택근무와 공부에 맞는 데스크 세트.</p><span class="tag">서재</span></div>
-        <div class="card"><div class="icon">🗄️</div><h3>수납장</h3><p>좁은 집도 넓게 쓰는 수납 아이디어.</p><span class="tag">수납</span></div>
+        <div class="card" data-q="sofa living room"><div class="thumb"><span class="icon">🛋️</span></div><h3>소파·거실</h3><p>가족이 모이는 거실을 편안하게 채워 줘요.</p><span class="tag">거실</span></div>
+        <div class="card" data-q="bedroom"><div class="thumb"><span class="icon">🛏️</span></div><h3>침대·침실</h3><p>숙면을 위한 침대와 수납 가구.</p><span class="tag">침실</span></div>
+        <div class="card" data-q="desk office chair"><div class="thumb"><span class="icon">🪑</span></div><h3>책상·의자</h3><p>재택근무와 공부에 맞는 데스크 세트.</p><span class="tag">서재</span></div>
+        <div class="card" data-q="storage cabinet furniture"><div class="thumb"><span class="icon">🗄️</span></div><h3>수납장</h3><p>좁은 집도 넓게 쓰는 수납 아이디어.</p><span class="tag">수납</span></div>
       </div>
     </section>
 
@@ -238,10 +251,10 @@
       <h1>🏠 부동산</h1>
       <p class="lead">주거 형태별로 살펴보는 부동산 카테고리입니다.</p>
       <div class="grid">
-        <div class="card"><div class="icon">🏢</div><h3>아파트</h3><p>단지 규모와 교통, 학군을 함께 비교해요.</p><span class="tag">매매·전세</span></div>
-        <div class="card"><div class="icon">🏬</div><h3>오피스텔</h3><p>1~2인 가구에 맞는 도심형 주거.</p><span class="tag">월세</span></div>
-        <div class="card"><div class="icon">🏘️</div><h3>빌라·주택</h3><p>조용한 주거 환경과 넓은 면적.</p><span class="tag">전세·월세</span></div>
-        <div class="card"><div class="icon">🏪</div><h3>상가·사무실</h3><p>창업과 사무 공간을 위한 임대 정보.</p><span class="tag">임대</span></div>
+        <div class="card" data-q="apartment building"><div class="thumb"><span class="icon">🏢</span></div><h3>아파트</h3><p>단지 규모와 교통, 학군을 함께 비교해요.</p><span class="tag">매매·전세</span></div>
+        <div class="card" data-q="studio apartment"><div class="thumb"><span class="icon">🏬</span></div><h3>오피스텔</h3><p>1~2인 가구에 맞는 도심형 주거.</p><span class="tag">월세</span></div>
+        <div class="card" data-q="house exterior"><div class="thumb"><span class="icon">🏘️</span></div><h3>빌라·주택</h3><p>조용한 주거 환경과 넓은 면적.</p><span class="tag">전세·월세</span></div>
+        <div class="card" data-q="office building"><div class="thumb"><span class="icon">🏪</span></div><h3>상가·사무실</h3><p>창업과 사무 공간을 위한 임대 정보.</p><span class="tag">임대</span></div>
       </div>
       <p class="note">※ 소개용 예시 화면이며 실제 매물 정보가 아닙니다.</p>
     </section>
@@ -275,7 +288,7 @@
 
   <a class="go-index" href="index.html" aria-label="인덱스 페이지로 이동" title="인덱스 페이지"><span class="ic">🏝️</span><span class="tx">인덱스</span></a>
 
-  <footer>© 반응형 메뉴 예제 · PC는 가로 메뉴, 모바일은 햄버거 메뉴</footer>
+  <footer>© 반응형 메뉴 예제 · PC는 가로 메뉴, 모바일은 햄버거 메뉴<br>사진: <a href="https://pixabay.com" target="_blank" rel="noopener">Pixabay</a></footer>
 
   <script>
     var PANELS = ['food', 'furniture', 'estate', 'stock', 'map'];
@@ -293,6 +306,27 @@
       links.forEach(function (a) {
         if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'page');
         else a.removeAttribute('aria-current');
+      });
+      loadPhotos(id);
+    }
+
+    // 📷 카드의 이모지를 Pixabay 실제 사진으로 바꾼다 (보이는 카테고리만, 한 번만).
+    // index.html 과 같은 서버 함수(/api/pixabay)를 쓴다. 실패하면 이모지가 그대로 남는다.
+    function loadPhotos(panelId) {
+      if (!/^https?:$/.test(location.protocol)) return;   // 파일로 열었을 때는 건너뜀
+      document.querySelectorAll('#' + panelId + ' .card[data-q]').forEach(function (card) {
+        if (card.dataset.loaded) return;
+        card.dataset.loaded = '1';
+        fetch('/api/pixabay?q=' + encodeURIComponent(card.dataset.q) + '&page=1')
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (data) {
+            if (!data || !data.hits || !data.hits.length) return;
+            var img = new Image();
+            img.alt = card.querySelector('h3').textContent;
+            img.onload = function () { card.querySelector('.thumb').replaceChildren(img); };
+            img.src = data.hits[0].webformatURL;
+          })
+          .catch(function () {});
       });
     }
 
