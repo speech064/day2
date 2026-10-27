@@ -5,13 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>제주 맛 가이드</title>
   <style>
+    /* 캐릭터 색에서 가져온 팔레트: 크림 · 진한 갈색 윤곽선 · 벚꽃 분홍 · 감귤 주황 · 망사리 초록 · 지하수 파랑 */
+    :root {
+      --cream: #fffaf0;
+      --brown: #4b2a24;
+      --pink: #f6b8c8;
+      --pink-d: #c2456c;
+      --orange: #ff9a2e;
+      --orange-d: #b85c00;
+      --green-d: #2f7d5b;
+      --blue: #8ec9f0;
+      --blue-d: #2f6fae;
+      --stone: #6c6168;
+    }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: sans-serif;
       line-height: 1.6;
-      color: #3a3631;
-      background: linear-gradient(180deg, #fff8e6 0%, #e6f5fb 50%, #bfe6f5 100%) fixed;
+      color: var(--brown);
+      background: linear-gradient(180deg, #fff1f4 0%, #fff8ee 40%, #e3f3fc 100%) fixed;
     }
 
     /* 전체 레이아웃: header / nav / (section+article | aside) / footer */
@@ -38,26 +51,34 @@
     aside   { grid-area: aside; }
     footer  { grid-area: footer; }
 
-    /* 🍊 header */
+    /* 🐱🐶 header: 고양이와 강아지가 제목 양옆에 */
     header {
-      padding: 2rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
       text-align: center;
-      color: #4a2200;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #ffe9a8, #ffd166 55%, #ffb347);
+      border: 3px solid var(--brown);
+      border-radius: 20px;
+      box-shadow: 5px 5px 0 rgba(75, 42, 36, 0.25);
+      background: linear-gradient(135deg, #ffe3ea, #fff1dc 55%, #ffd9a8);
     }
-    header h1 { margin: 0; font-size: 2.2rem; }
+    header h1 { margin: 0; font-size: 2.2rem; color: var(--brown); }
     header p { margin: 0.4rem 0 0; }
+    header img { width: 100%; max-width: 200px; justify-self: center; mix-blend-mode: multiply; }
+    .hero-cat { animation: bob 3s ease-in-out infinite; }
+    .hero-dog { animation: bob 3s ease-in-out infinite 1.5s; }
+    @keyframes bob { 50% { transform: translateY(-6px); } }
 
-    /* 🛣️ nav */
+    /* 🛣️ nav: 해안도로 */
     nav {
       position: sticky;
       top: 0;
       z-index: 5;
-      border-top: 4px solid #fff;
-      border-bottom: 4px solid #fff;
-      border-radius: 8px;
-      background: #3f5266;
+      border: 3px solid var(--brown);
+      border-radius: 14px;
+      background: var(--blue-d);
     }
     nav ul {
       display: flex;
@@ -76,33 +97,51 @@
       border: 2px solid #fff;
       border-radius: 999px;
     }
-    nav a:hover, nav a:focus { background: #ffd166; color: #3a2400; border-color: #ffd166; }
+    nav a:hover, nav a:focus { background: var(--pink); color: var(--brown); border-color: var(--pink); }
 
-    /* 🪨 section / article / aside 공통 카드 (현무암 질감) */
+    /* 🃏 카드: 캐릭터 그림처럼 진한 갈색 윤곽선 + 크림색 바탕 */
     section, article, aside {
       padding: 1.5rem;
-      border: 3px solid #b9b1a5;
-      border-top: 8px solid #ff9f1c;
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(80, 60, 30, 0.2);
-      background:
-        radial-gradient(circle at 20% 25%, #bdb5a9 0 3px, transparent 4px),
-        radial-gradient(circle at 70% 15%, #bdb5a9 0 2px, transparent 3px),
-        radial-gradient(circle at 45% 60%, #bdb5a9 0 4px, transparent 5px),
-        radial-gradient(circle at 85% 70%, #bdb5a9 0 3px, transparent 4px),
-        linear-gradient(145deg, #f7f3ec, #e4ded3);
-      background-size: 90px 90px, 70px 70px, 110px 110px, 80px 80px, 100% 100%;
+      border: 3px solid var(--brown);
+      border-radius: 20px;
+      box-shadow: 5px 5px 0 rgba(75, 42, 36, 0.25);
+      background: var(--cream);
     }
-    /* 큰 제목: 돌 무늬와 상관없이 잘 보이도록 진한 배경 띠 + 흰 글씨 */
+    /* 큰 제목: 섹션마다 캐릭터 색 띠 + 흰 글씨 */
     h2 {
       margin: 0 0 1rem;
       padding: 0.45rem 1rem;
       font-size: 1.35rem;
       color: #fff;
-      background: #7a3300;
-      border-radius: 10px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+      background: var(--brown);
+      border-radius: 12px;
     }
+    #photos h2   { background: var(--blue-d); }    /* 지하수 요정 */
+    #products h2 { background: var(--orange-d); }  /* 감귤 */
+    #story h2    { background: var(--pink-d); }    /* 벚꽃 */
+    aside h2     { background: var(--green-d); }   /* 망사리 */
+
+    /* 💬 캐릭터 말풍선 */
+    .guide { display: flex; align-items: center; gap: 1rem; margin: 0.5rem 0 1rem; }
+    .guide img { width: 120px; flex: none; mix-blend-mode: multiply; }
+    .bubble {
+      position: relative;
+      margin: 0;
+      padding: 0.6rem 1rem;
+      background: #fff;
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+    }
+    .guide img.flip { transform: scaleX(-1); } /* 좌우 반전: 말풍선 쪽을 바라보게 */
+    .guide.right { flex-direction: row-reverse; }
+    aside details {
+      margin-bottom: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #fff;
+      border-radius: 8px;
+    }
+    aside summary { cursor: pointer; font-weight: bold; }
+    aside details p { margin: 0.4rem 0 0; font-size: 0.9rem; background: none; padding: 0; }
     aside h2:not(:first-child) { margin-top: 1.5rem; }
 
     /* 🌸🍊 흩날리는 벚꽃잎과 떨어지는 감귤 */
@@ -122,7 +161,7 @@
       to   { margin-left: 25px;  transform: rotate(30deg); }
     }
     @media (prefers-reduced-motion: reduce) { .fall { display: none; } }
-    h3 { margin: 0 0 0.25rem; color: #2b2622; }
+    h3 { margin: 0 0 0.25rem; color: var(--brown); }
 
     /* section: 대표 특산물 카드 */
     .products {
@@ -134,20 +173,21 @@
       padding: 1rem;
       text-align: center;
       background: #fff;
-      border: 2px solid #ffd9a0;
-      border-radius: 12px;
+      border: 2px solid var(--brown);
+      border-radius: 14px;
       transition: transform 0.15s;
     }
     .product:hover { transform: translateY(-4px); }
-    .product .emoji { font-size: 2.5rem; }
-    .product p { margin: 0.25rem 0 0; font-size: 0.9rem; color: #3a3631; }
+    .product .emoji { height: 3.2rem; font-size: 2.5rem; line-height: 3.2rem; }
+    .product .emoji img { height: 100%; width: auto; mix-blend-mode: multiply; }
+    .product p { margin: 0.25rem 0 0; font-size: 0.9rem; color: var(--brown); }
     .tag {
       display: inline-block;
       margin-top: 0.4rem;
       padding: 0.1rem 0.6rem;
       font-size: 0.8rem;
       color: #fff;
-      background: #2e7d32;
+      background: var(--green-d);
       border-radius: 999px;
     }
 
@@ -156,27 +196,26 @@
     article blockquote {
       margin: 1rem 0 0;
       padding: 0.8rem 1rem;
-      background: #fff0c9;
-      border-left: 6px solid #ff9f1c;
+      background: #ffe3ea;
+      border-left: 6px solid var(--pink-d);
       border-radius: 0 8px 8px 0;
     }
 
     /* aside: 제철 달력과 팁 */
     aside ul { margin: 0 0 1.5rem; padding-left: 1.2rem; }
     aside li { margin-bottom: 0.4rem; }
-    .note { font-size: 0.85rem; color: #4d473f; }
-    /* 돌 질감 점 위에서도 글씨가 잘 보이도록 본문 영역에 반투명 흰 배경 */
-    article p, aside ul { background: rgba(255, 255, 255, 0.65); border-radius: 8px; padding: 0.5rem 0.75rem; }
+    .note { font-size: 0.85rem; color: var(--brown); }
+    article p, aside ul { background: #fff; border-radius: 8px; padding: 0.5rem 0.75rem; }
     aside ul { padding-left: 1.8rem; }
 
     /* 🌊 footer */
     footer {
       padding: 1rem;
       text-align: center;
-      color: #4a2200;
-      background: #fff0c9;
-      border-top: 4px solid #ff9f1c;
-      border-radius: 12px;
+      color: var(--brown);
+      background: var(--pink);
+      border: 3px solid var(--brown);
+      border-radius: 16px;
     }
 
     /* 📷 제주 사진 검색 (Pixabay) */
@@ -186,7 +225,8 @@
       min-width: 160px;
       padding: 0.6rem;
       font-size: 1rem;
-      border: 2px solid #b9b1a5;
+      color: var(--brown);
+      border: 2px solid var(--brown);
       border-radius: 8px;
     }
     #photo-form button {
@@ -197,42 +237,64 @@
       cursor: pointer;
       border: 0;
       border-radius: 8px;
-      background: #b85c00;
+      background: var(--blue-d);
     }
     #photo-status { min-height: 1.5rem; margin: 0.25rem 0; }
     #photo-status.error { color: #b71c1c; font-weight: bold; }
-    .slider { display: flex; align-items: center; gap: 0.5rem; }
-    .viewport { flex: 1; overflow: hidden; }
-    .slide { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-    .slide.in-right { animation: inRight 0.3s; }
-    .slide.in-left  { animation: inLeft 0.3s; }
-    @keyframes inRight { from { transform: translateX(60px); opacity: 0; } }
-    @keyframes inLeft  { from { transform: translateX(-60px); opacity: 0; } }
-    .slide a { position: relative; display: block; aspect-ratio: 1; overflow: hidden; border-radius: 8px; background: #ddd; }
-    .slide img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 0.2s; }
-    .slide a:hover img { transform: scale(1.08); }
-    .slide span {
+    /* 한 장씩 0.5초마다 넘어가는 슬라이드 */
+    .stage {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border: 3px solid var(--brown);
+      border-radius: 14px;
+      background: #e3f3fc;
+    }
+    .stage:empty::before {
+      content: "검색어를 입력하고 검색 버튼을 누르면 사진이 슬라이드로 나와요 📷";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      text-align: center;
+      color: var(--brown);
+    }
+    .stage .item { position: absolute; inset: 0; }
+    .stage .item.enter { animation: itemIn 0.35s ease-out; }
+    .stage .item.leave { animation: itemOut 0.35s ease-in forwards; }
+    @keyframes itemIn  { from { transform: translateX(100%); } }
+    @keyframes itemOut { to   { transform: translateX(-100%); } }
+    .stage a { display: block; width: 100%; height: 100%; }
+    .stage img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .stage .cap {
       position: absolute; left: 0; right: 0; bottom: 0;
-      padding: 2px 6px;
-      font-size: 0.7rem;
+      padding: 4px 10px;
+      font-size: 0.85rem;
       color: #fff;
-      background: rgba(0, 0, 0, 0.65);
+      background: rgba(75, 42, 36, 0.78);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .arrow {
-      width: 44px; height: 44px;
-      font-size: 1.5rem;
+    .controls { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.6rem; }
+    .controls button {
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      font-weight: bold;
       color: #fff;
       cursor: pointer;
       border: 0;
-      border-radius: 50%;
-      background: #3f5266;
+      border-radius: 8px;
+      background: var(--blue-d);
     }
-    .arrow:disabled { background: #9aa5b1; cursor: default; }
-    #photo-page { margin-top: 0.5rem; text-align: center; font-size: 0.9rem; }
-    .credit { margin: 0.75rem 0 0; font-size: 0.8rem; color: #4d473f; }
+    .controls button:disabled { background: #a9b9c9; cursor: default; }
+    #photo-counter { font-size: 0.9rem; }
+    @media (prefers-reduced-motion: reduce) {
+      .stage .item.enter, .stage .item.leave { animation: none; }
+    }
+    .credit { margin: 0.75rem 0 0; font-size: 0.8rem; color: var(--brown); }
 
     /* 좁은 화면에서는 한 줄로 쌓기 */
     @media (max-width: 760px) {
@@ -240,16 +302,22 @@
         grid-template-columns: 1fr;
         grid-template-areas: "header" "nav" "photos" "section" "article" "aside" "footer";
       }
+      header { grid-template-columns: 1fr 1fr; }
+      header > div { grid-column: 1 / -1; order: -1; }
       header h1 { font-size: 1.7rem; }
-      .slide { grid-template-columns: repeat(2, 1fr); }
+      .guide img { width: 90px; }
     }
   </style>
 </head>
 <body>
   <div class="layout">
     <header>
-      <h1>🍊 제주 맛 가이드 🌊</h1>
-      <p>바다와 화산섬이 키운 제주 특산물을 소개합니다</p>
+      <img class="hero-cat" src="assets/cat.png" alt="현무암 모자와 벚꽃 목걸이를 한 고양이">
+      <div>
+        <h1>🌸 제주 맛 가이드 🍊</h1>
+        <p>바다와 화산섬이 키운 제주 특산물을 소개합니다</p>
+      </div>
+      <img class="hero-dog" src="assets/dog.png" alt="해녀 망사리를 문 강아지">
     </header>
 
     <nav>
@@ -263,23 +331,32 @@
     </nav>
 
     <section id="photos">
-      <h2>📷 제주 사진 검색</h2>
+      <h2>💧 제주 사진 검색</h2>
+      <div class="guide">
+        <img src="assets/fairy.png" alt="제주 지하수 요정">
+        <p class="bubble">맑은 지하수처럼 투명한 제주 풍경을 같이 찾아볼까요?</p>
+      </div>
       <form id="photo-form">
         <input id="photo-q" type="text" value="제주" placeholder="검색어 (예: 한라봉, 성산일출봉)" required>
         <button type="submit">검색</button>
       </form>
       <div id="photo-status"></div>
-      <div class="slider">
-        <button id="photo-prev" class="arrow" aria-label="이전 10개" disabled>‹</button>
-        <div class="viewport"><div id="photo-slide" class="slide"></div></div>
-        <button id="photo-next" class="arrow" aria-label="다음 10개" disabled>›</button>
+      <div id="photo-stage" class="stage" aria-live="polite"></div>
+      <div class="controls">
+        <button id="photo-play" type="button" disabled>⏸ 멈춤</button>
+        <span id="photo-counter"></span>
+        <button id="photo-more" type="button" disabled>다음 10장 ›</button>
       </div>
-      <div id="photo-page"></div>
       <p class="credit">Images from <a href="https://pixabay.com" target="_blank" rel="noopener">Pixabay</a></p>
     </section>
 
     <section id="products">
-      <h2>🛍️ 대표 특산물</h2>
+      <!-- 강아지: 해녀 망사리 = 해산물/특산물 안내 -->
+      <div class="guide">
+        <img class="flip" src="assets/dog.png" alt="해녀 망사리를 문 강아지">
+        <p class="bubble">해녀 망사리 가득 담아 왔어요! 오늘은 어떤 특산물이 궁금해요?</p>
+      </div>
+      <h2>🍊 대표 특산물</h2>
       <div class="products">
         <div class="product">
           <div class="emoji">🍊</div>
@@ -321,7 +398,11 @@
     </section>
 
     <article id="story">
-      <h2>📖 제주의 맛 이야기</h2>
+      <h2>🌸 제주의 맛 이야기</h2>
+      <div class="guide right">
+        <img src="assets/cat.png" alt="현무암 모자와 벚꽃 목걸이를 한 고양이">
+        <p class="bubble">검은 현무암 위에 벚꽃이 피는 섬, 제주 이야기를 들려줄게요!</p>
+      </div>
       <p>
         제주는 화산이 만든 섬입니다. 거친 바람과 검은 현무암 땅, 맑은 바다가
         함께 어우러져 다른 곳에서는 맛볼 수 없는 먹거리를 키워 냅니다.
@@ -356,6 +437,49 @@
         <li>📦 신선 식품은 택배로 보내면 짐이 가벼워요.</li>
         <li>🏷️ 구매 전 원산지와 유통기한을 꼭 확인하세요.</li>
       </ul>
+
+      <h2>🎁 선물 고르기</h2>
+      <ul>
+        <li>🍊 <b>한라봉·천혜향</b>: 제철 과일 선물 세트</li>
+        <li>🍫 <b>감귤 초콜릿</b>: 가볍고 나눠 먹기 좋아요</li>
+        <li>🍡 <b>오메기떡</b>: 쫀득한 전통 떡 선물</li>
+        <li>🍵 <b>녹차 제품</b>: 차, 과자, 화장품까지 다양해요</li>
+        <li>🐟 <b>갈치·옥돔</b>: 냉동 포장으로 택배 가능</li>
+      </ul>
+
+      <h2>🗺️ 이런 순서로 즐겨요</h2>
+      <ul>
+        <li>1️⃣ 아침: 시장에서 간식과 과일 맛보기</li>
+        <li>2️⃣ 낮: 해안도로 드라이브와 바다 구경</li>
+        <li>3️⃣ 오후: 귤 따기·차밭 같은 체험</li>
+        <li>4️⃣ 저녁: 신선한 해산물이나 흑돼지 식사</li>
+        <li>5️⃣ 마무리: 택배로 선물 보내기</li>
+      </ul>
+
+      <h2>❓ 자주 묻는 질문</h2>
+      <details>
+        <summary>귤은 언제 가장 맛있나요?</summary>
+        <p>감귤은 보통 늦가을부터 겨울까지가 제철이에요.</p>
+      </details>
+      <details>
+        <summary>특산물은 어디서 살 수 있나요?</summary>
+        <p>전통시장, 농장 직판장, 공항 주변 상점에서 만날 수 있어요.</p>
+      </details>
+      <details>
+        <summary>택배로 보낼 수 있나요?</summary>
+        <p>과일과 냉동 수산물은 택배 포장이 가능한 곳이 많아요.</p>
+      </details>
+      <details>
+        <summary>체험은 예약이 필요한가요?</summary>
+        <p>농장과 체험장마다 달라서 미리 확인하는 것이 좋아요.</p>
+      </details>
+
+      <h2>🗣️ 제주 말 한마디</h2>
+      <ul>
+        <li>👋 <b>혼저옵서예</b>: 어서 오세요</li>
+        <li>🙏 <b>고맙수다</b>: 고맙습니다</li>
+        <li>💛 <b>폭삭 속았수다</b>: 정말 수고 많으셨어요</li>
+      </ul>
     </aside>
 
     <footer>© 제주 맛 가이드 · 🌴 제주의 맛과 멋을 전합니다</footer>
@@ -383,18 +507,23 @@
     })();
 
     // 📷 제주 사진 검색: Pixabay API는 서버(/api/pixabay)가 환경변수 키로 호출한다.
-    const PER_PAGE = 10;
+    // 검색하면 10장을 미리 받아 둔 뒤, 한 장씩 0.5초마다 슬라이드로 보여 준다.
+    const SLIDE_MS = 500;
     const form = document.getElementById('photo-form');
     const qInput = document.getElementById('photo-q');
     const statusEl = document.getElementById('photo-status');
-    const slideEl = document.getElementById('photo-slide');
-    const pageEl = document.getElementById('photo-page');
-    const prevBtn = document.getElementById('photo-prev');
-    const nextBtn = document.getElementById('photo-next');
+    const stage = document.getElementById('photo-stage');
+    const counterEl = document.getElementById('photo-counter');
+    const playBtn = document.getElementById('photo-play');
+    const moreBtn = document.getElementById('photo-more');
 
     let query = '';
     let page = 1;
     let totalPages = 1;
+    let hits = [];
+    let index = -1;
+    let timer = null;
+    let playing = true;
     let loading = false;
 
     function setStatus(text, isError) {
@@ -402,10 +531,54 @@
       statusEl.className = isError ? 'error' : '';
     }
 
-    async function load(newPage, direction) {
+    function startTimer() { stopTimer(); timer = setInterval(showNext, SLIDE_MS); }
+    function stopTimer() { clearInterval(timer); timer = null; }
+
+    // 다음 사진을 오른쪽에서 밀어 넣고, 이전 사진은 왼쪽으로 내보낸다
+    function showNext() {
+      if (!hits.length) return;
+      index = (index + 1) % hits.length;
+      const h = hits[index];
+
+      const item = document.createElement('div');
+      item.className = 'item enter';
+      const a = document.createElement('a');
+      a.href = h.pageURL;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      const img = document.createElement('img');
+      img.src = h.webformatURL;
+      img.alt = h.tags;
+      const cap = document.createElement('span');
+      cap.className = 'cap';
+      cap.textContent = h.tags;
+      a.append(img, cap);
+      item.appendChild(a);
+
+      const old = stage.lastElementChild;
+      stage.appendChild(item);
+      if (old) {
+        old.classList.remove('enter');
+        old.classList.add('leave');
+        setTimeout(() => old.remove(), 400);
+      }
+      counterEl.textContent = (index + 1) + ' / ' + hits.length + ' · ' + page + ' 페이지';
+    }
+
+    // 사진을 미리 받아 두어야 0.5초 간격이 끊기지 않는다
+    function preload(list) {
+      return Promise.all(list.map(h => new Promise(resolve => {
+        const im = new Image();
+        im.onload = im.onerror = resolve;
+        im.src = h.webformatURL;
+      })));
+    }
+
+    async function search(newPage) {
       if (loading) return;
       loading = true;
-      prevBtn.disabled = nextBtn.disabled = true;
+      stopTimer();
+      playBtn.disabled = moreBtn.disabled = true;
       setStatus('불러오는 중...');
 
       try {
@@ -420,58 +593,50 @@
                                               : data.error || '오류가 발생했습니다 (' + res.status + ')');
         }
         if (!data.hits.length) {
-          slideEl.replaceChildren();
-          pageEl.textContent = '';
+          hits = [];
+          stage.replaceChildren();
+          counterEl.textContent = '';
           setStatus('"' + query + '" 검색 결과가 없습니다.');
           return;
         }
+        await preload(data.hits);
         page = newPage;
-        totalPages = Math.max(1, Math.ceil(data.totalHits / PER_PAGE));
-        render(data.hits, direction);
-        pageEl.textContent = page + ' / ' + totalPages + ' 페이지 (총 ' + data.totalHits + '장)';
+        totalPages = Math.max(1, Math.ceil(data.totalHits / 10));
+        hits = data.hits;
+        index = -1;
+        stage.replaceChildren();
         setStatus('');
+        playing = true;
+        playBtn.textContent = '⏸ 멈춤';
+        showNext();
+        startTimer();
       } catch (err) {
         setStatus(err.message || '불러오지 못했습니다.', true);
       } finally {
         loading = false;
-        prevBtn.disabled = page <= 1;
-        nextBtn.disabled = page >= totalPages;
+        playBtn.disabled = !hits.length;
+        moreBtn.disabled = !hits.length;
       }
-    }
-
-    // 10장을 한 슬라이드로 그리고, 이동 방향에 맞게 애니메이션
-    function render(hits, direction) {
-      const items = hits.map(h => {
-        const a = document.createElement('a');
-        a.href = h.pageURL;
-        a.target = '_blank';
-        a.rel = 'noopener';
-        const img = document.createElement('img');
-        img.src = h.webformatURL;
-        img.alt = h.tags;
-        img.loading = 'lazy';
-        const cap = document.createElement('span');
-        cap.textContent = h.tags;
-        a.append(img, cap);
-        return a;
-      });
-      slideEl.replaceChildren(...items);
-      slideEl.className = 'slide ' + (direction === 'prev' ? 'in-left' : 'in-right');
     }
 
     form.addEventListener('submit', e => {
       e.preventDefault();
       query = qInput.value.trim();
       if (!query) return;
-      page = 1;
-      load(1, 'next');
+      search(1);
     });
-    prevBtn.addEventListener('click', () => load(page - 1, 'prev'));
-    nextBtn.addEventListener('click', () => load(page + 1, 'next'));
+    moreBtn.addEventListener('click', () => search(page >= totalPages ? 1 : page + 1));
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? '⏸ 멈춤' : '▶ 재생';
+      playing ? startTimer() : stopTimer();
+    });
+    // 마우스를 올리면 잠시 멈춰서 사진을 눌러 볼 수 있다
+    stage.addEventListener('mouseenter', stopTimer);
+    stage.addEventListener('mouseleave', () => { if (playing && hits.length) startTimer(); });
 
     // 처음 열 때 "제주" 사진을 보여 준다
     query = qInput.value.trim();
-    load(1, 'next');
-  </script>
+    search(1);  </script>
 </body>
 </html>
