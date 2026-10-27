@@ -3,17 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>카운터</title>
+  <title>화면 부품 지도</title>
   <style>
+
     body {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
       min-height: 100vh;
       margin: 0;
       font-family: sans-serif;
+      color: #3a3631;
+      /* 제주 하늘과 바다 */
+      background: linear-gradient(180deg, #fff8e6 0%, #e6f5fb 40%, #9fd8ee 100%) fixed;
     }
+
+    /* 🍊 감귤 헤더 */
+    header {
+      position: relative;
+      overflow: hidden;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      color: #7a3b00;
+      background: linear-gradient(135deg, #ffe08a, #ffbf47 55%, #ff9f1c);
+    }
+    header h1 { margin: 0; font-size: 1.75rem; letter-spacing: 0.05em; }
+    header p { margin: 0.25rem 0 0; font-size: 0.9rem; }
+    .petal {
+      position: fixed;
+      top: -2rem;
+      z-index: 10;
+      pointer-events: none;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(360deg); }
+    }
+
+    /* 🛣️ 제주 해안도로 내비게이션 */
+    nav {
+      position: relative;
+      background: #6f8397;
+      border-top: 4px solid #fff;
+      border-bottom: 4px solid #fff;
+    }
+    nav::after { /* 도로 중앙선 */
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 3px;
+      background: repeating-linear-gradient(90deg, #ffd43b 0 24px, transparent 24px 44px);
+      pointer-events: none;
+    }
+    nav ul {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin: 0;
+      padding: 0.6rem;
+      list-style: none;
+    }
+    nav button {
+      font-size: 1rem;
+      padding: 0.4rem 1rem;
+      color: #fff;
+      background: #6f8397;
+      border: 2px solid #fff;
+      border-radius: 999px;
+    }
+    nav button.active { background: #ff9f1c; color: #fff; border-color: #fff; }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+
+    /* 🪨 밝은 현무암 카드 (구멍 숭숭 난 돌 질감) */
+    .card {
+      text-align: center;
+      min-width: 280px;
+      padding: 2rem;
+      color: #3a3631;
+      border: 3px solid #b9b1a5;
+      border-top: 8px solid #ff9f1c;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 20% 25%, #bdb5a9 0 3px, transparent 4px),
+        radial-gradient(circle at 70% 15%, #bdb5a9 0 2px, transparent 3px),
+        radial-gradient(circle at 45% 60%, #bdb5a9 0 4px, transparent 5px),
+        radial-gradient(circle at 85% 70%, #bdb5a9 0 3px, transparent 4px),
+        radial-gradient(circle at 10% 85%, #bdb5a9 0 2px, transparent 3px),
+        radial-gradient(circle at 60% 90%, #bdb5a9 0 3px, transparent 4px),
+        linear-gradient(145deg, #f3efe8, #dcd6cc);
+      background-size: 90px 90px, 70px 70px, 110px 110px, 80px 80px, 60px 60px, 100px 100px, 100% 100%;
+      box-shadow: 0 6px 16px rgba(80, 60, 30, 0.25);
+    }
+    footer {
+      padding: 1rem;
+      text-align: center;
+      color: #7a3b00;
+      background: #fff0c9;
+      border-top: 4px solid #ff9f1c;
+    }
+    .card #buttons { justify-content: center; }
+    [hidden] { display: none; }
+    .promo { text-align: left; max-width: 560px; max-height: 70vh; overflow-y: auto; }
+    .promo h2 { margin-top: 0; }
+    .promo li { margin-bottom: 0.4rem; }
     #count {
       font-size: 4rem;
       margin-bottom: 1rem;
@@ -26,97 +128,84 @@
       font-size: 1.25rem;
       padding: 0.5rem 1.5rem;
       cursor: pointer;
+      border-radius: 10px;
     }
-    .good { background: #ffe58a; }
-    .bad  { background: #ffb3b3; }
+    .card button {
+      color: #fff;
+      background: #ff9f1c;
+      border: 2px solid #e67e00;
+    }
+    .card button.good { background: #7cb342; border-color: #558b2f; color: #fff; }
+    .card button.bad  { background: #e57373; border-color: #c62828; color: #fff; }
     #msg {
       margin-top: 1rem;
       height: 1.5rem;
       font-size: 1.25rem;
     }
+  
+    /* ===== 부품 지도 전용 스타일 ===== */
+    body { padding: 1.5rem 5.5rem; display: block; }
+    .intro { max-width: 600px; margin: 0 auto 1rem; font-size: 0.9rem; }
+    .intro b.p { color: #d6336c; }
+    .intro b.b { color: #1c7ed6; }
+    .page { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; background: #fff; border: 1px solid #aaa; }
+    .page main { display: flex; flex-direction: column; gap: 1.5rem; }
+    .part { position: relative; overflow: visible; outline: 2px dashed #d6336c; outline-offset: -2px; }
+    .part.inner { outline-color: #1c7ed6; }
+    .tag { position: absolute; left: -4.2rem; top: 50%; transform: translateY(-50%); width: 3.8rem; padding: 0.15rem 0; z-index: 5;
+      font-size: 0.8rem; font-weight: bold; text-align: center; color: #fff; background: #d6336c; border-radius: 4px; }
+    .tag::after { content: ""; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); border: 3px solid transparent; border-left: 6px solid #d6336c; }
+    .tag.inner { background: #1c7ed6; }
+    .tag.inner::after { border-left-color: #1c7ed6; }
+    .tag.right { left: auto; right: -4.2rem; }
+    .tag.right::after { right: auto; left: -6px; border-left-color: transparent; border-right: 6px solid #1c7ed6; }
+    .promo { max-height: none; overflow: visible; }
+    .row { display: flex; gap: 0.5rem; justify-content: center; }
   </style>
 </head>
 <body>
-  <div id="count">0</div>
-  <div id="buttons"></div>
-  <div id="msg"></div>
-  <script>
-    /*
-     * [동작 방식]
-     * 1. 평소에는 +5 버튼만 보인다.
-     * 2. 보이지 않는 "목표 클릭 수"(1~10 랜덤)가 있고, 클릭이 그 횟수에 도달하면
-     *    랜덤 인카운트(찬스)가 발생한다.
-     * 3. 인카운트는 55% 확률로 "찬스"(+5 버튼 + +50 버튼 중 선택),
-     *    45% 확률로 "꽝"(- 버튼만 나타남)이다.
-     * 4. 사용자가 버튼을 하나 고르면 인카운트가 끝나고,
-     *    클릭 수와 목표 클릭 수가 초기화되어 다시 1~10 중 랜덤으로 정해진다.
-     */
-    const NORMAL = 5;        // 평소 증가량
-    const CHANCE = [50, 100];       // 찬스 버튼 증가량
-    const BAD = [-5, -10];   // 꽝일 때 나오는 감소 버튼들
-    const BAD_RATE = 0.45;    // 꽝 확률 45%
+  <h2 style="text-align:center">🗺️ 화면 부품 지도 (index.html)</h2>
+  <p class="intro">
+    <b class="p">분홍 점선</b> = 큰 구조(헤더·탭·카드·푸터), <b class="b">파랑 점선</b> = 안쪽 부품(목록·버튼).
+    이 화면에는 <b>입력창</b>이 없어서 이름표가 없습니다. 아래는 index.html을 본뜬 정적 미리보기입니다.
+  </p>
 
-    let count = 0;
-    const el = document.getElementById('count');
-    const msg = document.getElementById('msg');
-    const buttons = document.getElementById('buttons');
+  <div class="page">
+    <header class="part"><span class="tag">헤더</span>
+      <h1>🍊 제주 카운터 카드 🌸</h1>
+      <p>감귤 · 왕벚꽃 · 해안도로 · 현무암</p>
+    </header>
 
-    const rollTarget = () => Math.floor(Math.random() * 10) + 1;
-    let target = rollTarget();
-    let clicks = 0;
+    <nav class="part"><span class="tag">탭</span>
+      <ul class="part inner"><span class="tag inner right">목록</span>
+        <li><button class="active">카운터</button></li>
+        <li><button>제주대학교</button></li>
+        <li><button>규칙</button></li>
+      </ul>
+    </nav>
 
-    // 숫자 변경 (0 미만으로는 내려가지 않음)
-    function add(amount) {
-      count = Math.max(0, count + amount);
-      el.textContent = count;
-    }
+    <main>
+      <section class="card part"><span class="tag">카드</span>
+        <div id="count">0</div>
+        <div class="row part inner"><span class="tag inner right">버튼</span>
+          <button>+5</button>
+          <button class="good">+50</button>
+        </div>
+      </section>
 
-    // 버튼 하나 만들기
-    function makeButton(amount, className) {
-      const b = document.createElement('button');
-      b.textContent = (amount > 0 ? '+' : '') + amount;
-      if (className) b.className = className;
-      b.addEventListener('click', () => choose(amount));
-      return b;
-    }
+      <section class="card promo part"><span class="tag">카드</span>
+        <h2>🌋 제주대학교 홍보 문구 100선</h2>
+        <ol class="part inner"><span class="tag inner right">목록</span>
+          <li>🌴 바다와 한라산 사이, 꿈이 자라는 곳 제주대학교</li>
+          <li>🎓 제주의 미래를 여는 국립대학</li>
+          <li>🌊 파도처럼 거침없이, 제주대에서 시작하세요</li>
+          <li>⛰️ 한라산처럼 높은 꿈을 키우는 캠퍼스</li>
+          <li>… (100줄)</li>
+        </ol>
+      </section>
+    </main>
 
-    // 버튼 영역 다시 그리기. options가 없으면 평소 상태(+5만)
-    function render(options) {
-      buttons.replaceChildren(...(options || [makeButton(NORMAL)]));
-    }
-
-    // 클릭 처리: 평소 버튼이든 찬스 버튼이든 여기로 들어온다
-    let inEncounter = false;
-    function choose(amount) {
-      add(amount);
-
-      if (inEncounter) {
-        // 인카운트 중 선택 완료 -> 초기화 후 평소 상태로
-        inEncounter = false;
-        clicks = 0;
-        target = rollTarget();
-        msg.textContent = '';
-        render();
-        return;
-      }
-
-      clicks++;
-      if (clicks === target) startEncounter();
-    }
-
-    // 랜덤 인카운트 시작
-    function startEncounter() {
-      inEncounter = true;
-      if (Math.random() < BAD_RATE) {
-        msg.textContent = '💀 꽝! 하나를 골라야 합니다...';
-        render(BAD.map(n => makeButton(n, 'bad')));
-      } else {
-        msg.textContent = '🎉 찬스! 선택하세요';
-        render([makeButton(NORMAL), ...CHANCE.map(n => makeButton(n, 'good'))]);
-      }
-    }
-
-    render();
-  </script>
+    <footer class="part"><span class="tag">푸터</span>© 내 취향 카드</footer>
+  </div>
 </body>
 </html>
