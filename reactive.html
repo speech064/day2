@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>반응형 메뉴 예제</title>
+  <style>
+    :root {
+      --navy: #1f3a5f;
+      --navy-d: #162c48;
+      --accent: #ff8a3d;
+      --bg: #f4f6fa;
+      --card: #ffffff;
+      --text: #1d2733;
+      --muted: #66758a;
+      --line: #dfe5ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* 상단 바: 로고 + 메뉴 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+      min-height: 56px;
+    }
+    .logo { font-size: 1.15rem; font-weight: bold; color: #fff; text-decoration: none; }
+
+    /* PC: 가로 메뉴 */
+    nav ul { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none; }
+    nav a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #dbe5f3;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+    nav a:hover { background: var(--navy-d); color: #fff; }
+    nav a[aria-current="page"] { background: var(--accent); color: #fff; font-weight: bold; }
+
+    /* 햄버거 버튼: PC에서는 숨김 */
+    .burger {
+      display: none;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      background: none;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .burger:hover { background: var(--navy-d); }
+    .burger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      margin: 5px auto;
+      background: #fff;
+      border-radius: 2px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* 본문 */
+    main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }
+    main h1 { margin: 0 0 4px; font-size: 1.6rem; }
+    .lead { margin: 0 0 20px; color: var(--muted); }
+    .panel { display: none; }
+    .panel.on { display: block; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .card {
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+    .card .icon { font-size: 2.2rem; line-height: 1.2; }
+    .card h3 { margin: 6px 0 4px; font-size: 1.05rem; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .tag {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 2px 10px;
+      font-size: 0.78rem;
+      color: var(--navy);
+      background: #e6edf7;
+      border-radius: 999px;
+    }
+    .note { margin-top: 16px; font-size: 0.82rem; color: var(--muted); }
+
+    table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 14px; overflow: hidden; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+    th { background: #e6edf7; font-size: 0.9rem; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+    .up { color: #d6322f; }
+    .down { color: #1f66d1; }
+
+    .map-box {
+      display: grid;
+      place-items: center;
+      min-height: 320px;
+      margin-top: 14px;
+      color: var(--muted);
+      background: repeating-linear-gradient(45deg, #e9eef6, #e9eef6 12px, #f1f4f9 12px, #f1f4f9 24px);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+    .search { display: flex; gap: 8px; }
+    .search input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.65rem 0.9rem;
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+    .search button {
+      padding: 0 1.2rem;
+      font: inherit;
+      font-weight: bold;
+      color: #fff;
+      background: var(--accent);
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    footer { padding: 18px 16px; text-align: center; font-size: 0.85rem; color: var(--muted); }
+
+    /* 📱 모바일: 가로 메뉴 대신 햄버거 → 아래로 펼쳐지는 메뉴 */
+    @media (max-width: 720px) {
+      .burger { display: block; }
+      nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        display: none;
+        background: var(--navy);
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+      }
+      nav.open { display: block; }
+      nav ul { flex-direction: column; gap: 0; padding: 8px 12px 12px; }
+      nav a { padding: 0.85rem 0.9rem; }
+      main h1 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <a class="logo" href="#food">📚 카테고리 허브</a>
+      <button class="burger" id="burger" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="menu" aria-label="카테고리">
+        <ul>
+          <li><a href="#food">🍽️ 음식</a></li>
+          <li><a href="#furniture">🛋️ 가구</a></li>
+          <li><a href="#estate">🏠 부동산</a></li>
+          <li><a href="#stock">📈 주식</a></li>
+          <li><a href="#map">🗺️ 지도</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel" id="food">
+      <h1>🍽️ 음식</h1>
+      <p class="lead">오늘 뭐 먹을지 고민될 때 보는 메뉴 모음입니다.</p>
+      <div class="grid">
+        <div class="card"><div class="icon">🍲</div><h3>한식</h3><p>김치찌개, 비빔밥, 불고기처럼 든든한 한 끼.</p><span class="tag">점심 추천</span></div>
+        <div class="card"><div class="icon">🍝</div><h3>양식</h3><p>파스타와 스테이크로 즐기는 분위기 있는 식사.</p><span class="tag">저녁 추천</span></div>
+        <div class="card"><div class="icon">🍣</div><h3>일식</h3><p>초밥, 우동, 돈카츠 등 깔끔한 맛.</p><span class="tag">인기</span></div>
+        <div class="card"><div class="icon">🧋</div><h3>카페·디저트</h3><p>커피와 케이크로 쉬어 가는 시간.</p><span class="tag">간식</span></div>
+      </div>
+    </section>
+
+    <section class="panel" id="furniture">
+      <h1>🛋️ 가구</h1>
+      <p class="lead">공간별로 골라 보는 가구 카테고리입니다.</p>
+      <div class="grid">
+        <div class="card"><div class="icon">🛋️</div><h3>소파·거실</h3><p>가족이 모이는 거실을 편안하게 채워 줘요.</p><span class="tag">거실</span></div>
+        <div class="card"><div class="icon">🛏️</div><h3>침대·침실</h3><p>숙면을 위한 침대와 수납 가구.</p><span class="tag">침실</span></div>
+        <div class="card"><div class="icon">🪑</div><h3>책상·의자</h3><p>재택근무와 공부에 맞는 데스크 세트.</p><span class="tag">서재</span></div>
+        <div class="card"><div class="icon">🗄️</div><h3>수납장</h3><p>좁은 집도 넓게 쓰는 수납 아이디어.</p><span class="tag">수납</span></div>
+      </div>
+    </section>
+
+    <section class="panel" id="estate">
+      <h1>🏠 부동산</h1>
+      <p class="lead">주거 형태별로 살펴보는 부동산 카테고리입니다.</p>
+      <div class="grid">
+        <div class="card"><div class="icon">🏢</div><h3>아파트</h3><p>단지 규모와 교통, 학군을 함께 비교해요.</p><span class="tag">매매·전세</span></div>
+        <div class="card"><div class="icon">🏬</div><h3>오피스텔</h3><p>1~2인 가구에 맞는 도심형 주거.</p><span class="tag">월세</span></div>
+        <div class="card"><div class="icon">🏘️</div><h3>빌라·주택</h3><p>조용한 주거 환경과 넓은 면적.</p><span class="tag">전세·월세</span></div>
+        <div class="card"><div class="icon">🏪</div><h3>상가·사무실</h3><p>창업과 사무 공간을 위한 임대 정보.</p><span class="tag">임대</span></div>
+      </div>
+      <p class="note">※ 소개용 예시 화면이며 실제 매물 정보가 아닙니다.</p>
+    </section>
+
+    <section class="panel" id="stock">
+      <h1>📈 주식</h1>
+      <p class="lead">관심 종목을 한눈에 보는 표 예시입니다.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>종목</th><th>현재가</th><th>등락</th></tr></thead>
+          <tbody>
+            <tr><td>예시 종목 A</td><td>12,300원</td><td class="up">▲ 1.2%</td></tr>
+            <tr><td>예시 종목 B</td><td>45,600원</td><td class="down">▼ 0.8%</td></tr>
+            <tr><td>예시 종목 C</td><td>7,890원</td><td class="up">▲ 0.4%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">※ 화면 구성을 보여 주는 가상 데이터이며 실제 시세와 투자 권유가 아닙니다.</p>
+    </section>
+
+    <section class="panel" id="map">
+      <h1>🗺️ 지도</h1>
+      <p class="lead">장소를 검색하면 지도 서비스에서 열립니다.</p>
+      <form class="search" id="map-form">
+        <input id="map-q" type="text" placeholder="장소나 주소를 입력하세요" aria-label="장소 검색">
+        <button type="submit">검색</button>
+      </form>
+      <div class="map-box">🗺️ 지도 영역 (검색하면 새 창에서 열려요)</div>
+    </section>
+  </main>
+
+  <footer>© 반응형 메뉴 예제 · PC는 가로 메뉴, 모바일은 햄버거 메뉴</footer>
+
+  <script>
+    var PANELS = ['food', 'furniture', 'estate', 'stock', 'map'];
+    var burger = document.getElementById('burger');
+    var menu = document.getElementById('menu');
+    var links = menu.querySelectorAll('a');
+
+    // 선택한 카테고리만 보여 준다
+    function show(pick) {
+      var id = pick || location.hash.slice(1);
+      if (PANELS.indexOf(id) < 0) id = PANELS[0];
+      PANELS.forEach(function (p) {
+        document.getElementById(p).classList.toggle('on', p === id);
+      });
+      links.forEach(function (a) {
+        if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
+    }
+
+    // 햄버거 메뉴 열기/닫기
+    function setMenu(open) {
+      menu.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
+    }
+    burger.addEventListener('click', function () { setMenu(!menu.classList.contains('open')); });
+    links.forEach(function (a) {
+      a.addEventListener('click', function () { show(a.getAttribute('href').slice(1)); setMenu(false); window.scrollTo(0, 0); });
+    });
+    document.querySelector('.logo').addEventListener('click', function () { show('food'); setMenu(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+    document.addEventListener('click', function (e) {
+      if (!menu.contains(e.target) && !burger.contains(e.target)) setMenu(false);
+    });
+    window.addEventListener('resize', function () { if (window.innerWidth > 720) setMenu(false); });
+    window.addEventListener('hashchange', function () { show(); window.scrollTo(0, 0); });
+
+    // 지도 검색: 새 창에서 지도 서비스를 연다
+    document.getElementById('map-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var q = document.getElementById('map-q').value.trim();
+      if (!q) return;
+      window.open('https://map.naver.com/p/search/' + encodeURIComponent(q), '_blank', 'noopener');
+    });
+
+    show();
+  </script>
+</body>
+</html>
