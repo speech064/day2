@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>제주 맛 가이드</title>
   <style>
     /* 캐릭터 색에서 가져온 팔레트: 크림 · 진한 갈색 윤곽선 · 벚꽃 분홍 · 감귤 주황 · 망사리 초록 · 지하수 파랑 */
@@ -529,7 +529,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0.35rem 0.2rem 0.3rem;
+      min-height: 54px;
+      justify-content: center;
+      padding: 0.3rem 0.2rem;
       font: inherit;
       font-size: 1.2rem;
       line-height: 1.2;
@@ -538,17 +540,17 @@
       border: 0;
       cursor: pointer;
     }
-    #tabbar button span { font-size: 0.7rem; }
+    #tabbar button span { font-size: 0.8rem; }
     #tabbar button.on { background: var(--pink); color: var(--brown); font-weight: bold; }
     html.mv #tabbar { display: flex; }
     html.mv nav { display: none; }
     html.mv [data-tab]:not(.tab-active) { display: none; }
-    html.mv body { padding-bottom: 64px; }
-    html.mv #view-toggle, html.mv #agent-open { bottom: 72px; }
+    html.mv body { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+    html.mv #view-toggle, html.mv #agent-open { bottom: calc(66px + env(safe-area-inset-bottom)); }
     html.mv #agent-panel {
-      bottom: 72px;
-      height: min(560px, calc(100vh - 90px));
-      height: min(560px, calc(100dvh - 90px));
+      bottom: calc(66px + env(safe-area-inset-bottom));
+      height: min(560px, calc(100vh - 100px));
+      height: min(560px, calc(100dvh - 100px));
     }
     .agent-fake { margin: 0; padding: 0 12px 8px; text-align: center; font-size: 0.72rem; color: #7a5a52; }
     @media (max-width: 480px) {
