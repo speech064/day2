@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>제주 특산물 에이전트</title>
+  <style>
+    :root {
+      --cream: #fff6e6;
+      --brown: #4b2a24;
+      --pink-d: #c2476b;
+      --orange: #ffb347;
+      --orange-d: #c25e00;
+      --green-d: #2f6b4f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      color: var(--brown);
+      background: linear-gradient(160deg, #ffe3ea, #fff1dc 55%, #ffd9a8);
+    }
+    .chat {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 640px;
+      height: 100vh;
+      padding: 12px;
+      gap: 10px;
+    }
+    header {
+      padding: 0.7rem 1rem;
+      text-align: center;
+      background: var(--cream);
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+      box-shadow: 4px 4px 0 rgba(75, 42, 36, 0.25);
+    }
+    header h1 { margin: 0; font-size: 1.3rem; }
+    header p { margin: 0.2rem 0 0; font-size: 0.85rem; }
+
+    #log {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px;
+      background: var(--cream);
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+    }
+    .row { display: flex; align-items: flex-end; gap: 8px; }
+    .row.me { justify-content: flex-end; }
+    .avatar { flex: none; font-size: 1.8rem; line-height: 1; }
+    .bubble {
+      max-width: 75%;
+      padding: 0.6rem 0.9rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+      animation: pop 0.2s ease-out;
+    }
+    .row.bot .bubble { background: #fff; }
+    .row.me .bubble { background: var(--orange); }
+    .typing { color: #8a6a60; }
+    @keyframes pop { from { opacity: 0; transform: translateY(6px); } }
+
+    form { display: flex; gap: 8px; }
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.7rem 1rem;
+      font: inherit;
+      color: var(--brown);
+      background: #fff;
+      border: 3px solid var(--brown);
+      border-radius: 999px;
+    }
+    input:focus { outline: 3px solid var(--pink-d); outline-offset: 1px; }
+    button {
+      padding: 0 1.3rem;
+      font: inherit;
+      font-weight: bold;
+      color: #fff;
+      background: var(--orange-d);
+      border: 3px solid var(--brown);
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    button:hover { background: var(--pink-d); }
+    .fake { margin: 0; text-align: center; font-size: 0.75rem; color: #7a5a52; }
+  </style>
+</head>
+<body>
+  <main class="chat">
+    <header>
+      <h1>🍊 제주 특산물 에이전트</h1>
+      <p>제주도 특산물에 대해서 알아보는 기능</p>
+    </header>
+
+    <div id="log" aria-live="polite"></div>
+
+    <form id="form" autocomplete="off">
+      <input id="msg" type="text" placeholder="궁금한 제주 특산물을 물어보세요" aria-label="메시지 입력">
+      <button type="submit">보내기</button>
+    </form>
+
+    <p class="fake">※ 지금 답변은 미리 정해 둔 가짜 답이에요.</p>
+  </main>
+
+  <script>
+    // 가짜 답 3개를 차례로 돌려 쓴다 (진짜 검색은 5일차에)
+    const REPLIES = [
+      '안녕하세요! 저는 제주도 특산물을 알아보는 에이전트예요 🍊\n감귤, 갈치, 흑돼지 중에 어떤 게 가장 궁금하세요?',
+      '처음이라면 한라봉·천혜향을 추천해요! 겨울부터 초봄까지가 제철이고, 선물용으로도 인기가 많아요 🍊',
+      '아직 공부 중이에요! 5일차에 진짜로 알아볼게요.',
+    ];
+    const REPLY_DELAY = 1000;
+
+    const log = document.getElementById('log');
+    const form = document.getElementById('form');
+    const input = document.getElementById('msg');
+    let replyCount = 0;
+
+    function addRow(who, text) {
+      const row = document.createElement('div');
+      row.className = 'row ' + who;
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = text;
+      if (who === 'bot') {
+        const avatar = document.createElement('span');
+        avatar.className = 'avatar';
+        avatar.textContent = '🍊';
+        row.append(avatar);
+      }
+      row.append(bubble);
+      log.append(row);
+      log.scrollTop = log.scrollHeight;
+      return row;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      addRow('me', text);
+      input.value = '';
+
+      const typing = addRow('bot', '…');
+      typing.querySelector('.bubble').classList.add('typing');
+      setTimeout(() => {
+        typing.remove();
+        addRow('bot', REPLIES[replyCount % REPLIES.length]);
+        replyCount++;
+      }, REPLY_DELAY);
+    });
+
+    // 첫 인사
+    addRow('bot', '제주 특산물에 대해 무엇이든 물어보세요! 아래 입력창에 쓰고 Enter를 눌러 보세요.');
+    input.focus();
+  </script>
+</body>
+</html>

@@ -313,6 +313,89 @@
       header h1 { font-size: 1.7rem; }
       .guide img { width: 90px; }
     }
+
+    /* 💬 에이전트 채팅 위젯 */
+    #agent-open {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 20;
+      padding: 0.7rem 1.2rem;
+      font: inherit;
+      font-weight: bold;
+      color: #fff;
+      background: var(--orange-d);
+      border: 3px solid var(--brown);
+      border-radius: 999px;
+      box-shadow: 4px 4px 0 rgba(75, 42, 36, 0.3);
+      cursor: pointer;
+    }
+    #agent-open:hover { background: var(--pink-d); }
+    #agent-panel {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 21;
+      display: none;
+      flex-direction: column;
+      width: min(380px, calc(100vw - 24px));
+      height: min(520px, calc(100vh - 36px));
+      background: var(--cream);
+      border: 3px solid var(--brown);
+      border-radius: 20px;
+      box-shadow: 6px 6px 0 rgba(75, 42, 36, 0.3);
+      overflow: hidden;
+    }
+    #agent-panel.open { display: flex; }
+    #agent-open.hidden { display: none; }
+    .agent-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      color: #fff;
+      font-weight: bold;
+      background: var(--orange-d);
+    }
+    .agent-head button { font: inherit; font-size: 1.2rem; color: #fff; background: none; border: 0; cursor: pointer; }
+    #agent-log { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 12px; overflow-y: auto; }
+    .arow { display: flex; align-items: flex-end; gap: 6px; }
+    .arow.me { justify-content: flex-end; }
+    .arow .av { flex: none; font-size: 1.5rem; line-height: 1; }
+    .abubble {
+      max-width: 78%;
+      padding: 0.5rem 0.8rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+    }
+    .arow.bot .abubble { background: #fff; }
+    .arow.me .abubble { background: var(--orange); }
+    #agent-form { display: flex; gap: 6px; padding: 0 12px 6px; }
+    #agent-input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.55rem 0.9rem;
+      font: inherit;
+      color: var(--brown);
+      background: #fff;
+      border: 3px solid var(--brown);
+      border-radius: 999px;
+    }
+    #agent-form button {
+      padding: 0 1rem;
+      font: inherit;
+      font-weight: bold;
+      color: #fff;
+      background: var(--orange-d);
+      border: 3px solid var(--brown);
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .agent-fake { margin: 0; padding: 0 12px 8px; text-align: center; font-size: 0.72rem; color: #7a5a52; }
   </style>
 </head>
 <body>
@@ -645,5 +728,77 @@
     // 처음 열 때 "제주" 사진을 보여 준다
     query = qInput.value.trim();
     search(1);  </script>
+
+  <button id="agent-open" type="button" aria-controls="agent-panel">🍊 에이전트와 채팅</button>
+  <section id="agent-panel" aria-label="제주 특산물 에이전트 채팅">
+    <div class="agent-head"><span>🍊 제주 특산물 에이전트</span><button id="agent-close" type="button" aria-label="채팅 닫기">✕</button></div>
+    <div id="agent-log" aria-live="polite"></div>
+    <form id="agent-form" autocomplete="off">
+      <input id="agent-input" type="text" placeholder="궁금한 제주 특산물을 물어보세요" aria-label="메시지 입력">
+      <button type="submit">보내기</button>
+    </form>
+    <p class="agent-fake">※ 지금 답변은 미리 정해 둔 가짜 답이에요.</p>
+  </section>
+
+  <script>
+    // 💬 에이전트 채팅: 버튼을 누르면 열리고, 답은 가짜 3개를 차례로 돌려 쓴다
+    (function () {
+      var REPLIES = [
+        '안녕하세요! 저는 제주도 특산물을 알아보는 에이전트예요 🍊\n감귤, 갈치, 흑돼지 중에 어떤 게 가장 궁금하세요?',
+        '처음이라면 한라봉·천혜향을 추천해요! 겨울부터 초봄까지가 제철이고, 선물용으로도 인기가 많아요 🍊',
+        '아직 공부 중이에요! 5일차에 진짜로 알아볼게요.'
+      ];
+      var openBtn = document.getElementById('agent-open');
+      var panel = document.getElementById('agent-panel');
+      var log = document.getElementById('agent-log');
+      var form = document.getElementById('agent-form');
+      var input = document.getElementById('agent-input');
+      var count = 0;
+      var greeted = false;
+
+      function add(who, text) {
+        var row = document.createElement('div');
+        row.className = 'arow ' + who;
+        if (who === 'bot') {
+          var av = document.createElement('span');
+          av.className = 'av';
+          av.textContent = '🍊';
+          row.appendChild(av);
+        }
+        var b = document.createElement('div');
+        b.className = 'abubble';
+        b.textContent = text;
+        row.appendChild(b);
+        log.appendChild(row);
+        log.scrollTop = log.scrollHeight;
+        return row;
+      }
+
+      function setOpen(open) {
+        panel.classList.toggle('open', open);
+        openBtn.classList.toggle('hidden', open);
+        if (open) {
+          if (!greeted) { greeted = true; add('bot', '제주 특산물에 대해 무엇이든 물어보세요! 입력창에 쓰고 Enter를 눌러 보세요.'); }
+          input.focus();
+        }
+      }
+      openBtn.addEventListener('click', function () { setOpen(true); });
+      document.getElementById('agent-close').addEventListener('click', function () { setOpen(false); });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var text = input.value.trim();
+        if (!text) return;
+        add('me', text);
+        input.value = '';
+        var typing = add('bot', '…');
+        setTimeout(function () {
+          typing.remove();
+          add('bot', REPLIES[count % REPLIES.length]);
+          count++;
+        }, 1000);
+      });
+    })();
+  </script>
 </body>
 </html>
