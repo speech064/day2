@@ -302,21 +302,23 @@
     }
     .credit { margin: 0.75rem 0 0; font-size: 0.8rem; color: var(--brown); }
 
-    /* 📱 반응형: PC → 태블릿 → 모바일 */
+    /* 📱 반응형: PC → 태블릿 → 모바일 (창 폭이 아니라 .page 폭 기준이라 버튼으로 강제 전환도 가능) */
+    .page { container-type: inline-size; container-name: page; margin: 0 auto; }
+    html.force-m .page { max-width: 420px; }
     html { -webkit-text-size-adjust: 100%; }
     img { max-width: 100%; }
     .layout > * { min-width: 0; }   /* 격자 칸이 안쪽 내용 때문에 넓어지지 않게 */
     h1, h2, h3, p, li, summary { overflow-wrap: anywhere; }
 
     /* 태블릿: 오른쪽 칸을 조금 좁게, 제목을 조금 작게 */
-    @media (max-width: 980px) {
+    @container page (max-width: 980px) {
       .layout { grid-template-columns: 3fr 2fr; padding: 10px; gap: 10px; }
       header h1 { font-size: 1.9rem; }
       section, article, aside { padding: 1.1rem; }
     }
 
     /* 좁은 화면에서는 한 줄로 쌓기 */
-    @media (max-width: 760px) {
+    @container page (max-width: 760px) {
       .layout {
         grid-template-columns: minmax(0, 1fr);
         grid-template-areas: "header" "nav" "photos" "section" "article" "aside" "footer";
@@ -334,7 +336,7 @@
     }
 
     /* 휴대폰 */
-    @media (max-width: 480px) {
+    @container page (max-width: 480px) {
       .layout { padding: 8px; gap: 8px; }
       section, article, aside { padding: 0.9rem; border-radius: 16px; }
       header { padding: 0.7rem; border-radius: 16px; }
@@ -493,6 +495,61 @@
       border-radius: 999px;
       cursor: pointer;
     }
+    /* 📱🖥️ 화면 모드 전환 버튼 (작게, 왼쪽 아래) */
+    #view-toggle {
+      position: fixed;
+      left: 10px;
+      bottom: 10px;
+      z-index: 20;
+      padding: 0.25rem 0.7rem;
+      font: inherit;
+      font-size: 0.75rem;
+      color: var(--brown);
+      background: rgba(255, 250, 240, 0.92);
+      border: 2px solid var(--brown);
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    #view-toggle:hover { background: var(--pink); }
+
+    /* 📑 모바일: 위쪽 가로 메뉴는 빼고, 아래쪽 주제 탭으로 한 번에 한 주제만 보여 준다 */
+    #tabbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 19;
+      display: none;
+      background: var(--blue-d);
+      border-top: 3px solid var(--brown);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    #tabbar button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.35rem 0.2rem 0.3rem;
+      font: inherit;
+      font-size: 1.2rem;
+      line-height: 1.2;
+      color: #fff;
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+    #tabbar button span { font-size: 0.7rem; }
+    #tabbar button.on { background: var(--pink); color: var(--brown); font-weight: bold; }
+    html.mv #tabbar { display: flex; }
+    html.mv nav { display: none; }
+    html.mv [data-tab]:not(.tab-active) { display: none; }
+    html.mv body { padding-bottom: 64px; }
+    html.mv #view-toggle, html.mv #agent-open { bottom: 72px; }
+    html.mv #agent-panel {
+      bottom: 72px;
+      height: min(560px, calc(100vh - 90px));
+      height: min(560px, calc(100dvh - 90px));
+    }
     .agent-fake { margin: 0; padding: 0 12px 8px; text-align: center; font-size: 0.72rem; color: #7a5a52; }
     @media (max-width: 480px) {
       #agent-open { right: 10px; bottom: 10px; padding: 0.6rem 1rem; font-size: 0.9rem; }
@@ -509,6 +566,7 @@
   </style>
 </head>
 <body>
+  <div class="page">
   <div class="layout">
     <header>
       <img class="hero-cat" src="assets/cat.png" alt="현무암 모자와 벚꽃 목걸이를 한 고양이">
@@ -529,7 +587,7 @@
       </ul>
     </nav>
 
-    <section id="photos">
+    <section id="photos" data-tab="photos" class="tab-active">
       <h2>💧 제주 사진 검색</h2>
       <div class="guide">
         <img src="assets/fairy.png" alt="제주 지하수 요정">
@@ -549,7 +607,7 @@
       <p class="credit">Images from <a href="https://pixabay.com" target="_blank" rel="noopener">Pixabay</a></p>
     </section>
 
-    <section id="products">
+    <section id="products" data-tab="products">
       <!-- 강아지: 해녀 망사리 = 해산물/특산물 안내 -->
       <div class="guide">
         <img class="flip" src="assets/dog.png" alt="해녀 망사리를 문 강아지">
@@ -596,7 +654,7 @@
       </div>
     </section>
 
-    <article id="story">
+    <article id="story" data-tab="story">
       <h2>🌸 제주의 맛 이야기</h2>
       <div class="guide right">
         <img src="assets/cat.png" alt="현무암 모자와 벚꽃 목걸이를 한 고양이">
@@ -617,7 +675,7 @@
       <blockquote>🌸 제주에서는 한 입 먹을 때마다 섬의 계절이 함께 담깁니다.</blockquote>
     </article>
 
-    <aside id="season">
+    <aside id="season" data-tab="season">
       <h2>🌤️ 계절별 제주</h2>
       <ul>
         <li>🌸 <b>봄</b>: 유채꽃과 벚꽃, 산책하기 좋아요</li>
@@ -684,6 +742,7 @@
 
     <footer>© 제주 맛 가이드 · 🌴 제주의 맛과 멋을 전합니다</footer>
   </div>
+  </div><!-- /.page -->
 
   <script>
     // 🌸 벚꽃잎은 가볍게 흩날리고, 🍊 감귤은 더 빠르게 떨어진다
@@ -839,6 +898,13 @@
     query = qInput.value.trim();
     search(1);  </script>
 
+  <button id="view-toggle" type="button">📱 모바일 보기</button>
+  <div id="tabbar" role="tablist" aria-label="주제 탭">
+    <button type="button" role="tab" data-go="photos" class="on">📷<span>사진 검색</span></button>
+    <button type="button" role="tab" data-go="products">🍊<span>특산물</span></button>
+    <button type="button" role="tab" data-go="story">🌸<span>맛 이야기</span></button>
+    <button type="button" role="tab" data-go="season">📅<span>제철·팁</span></button>
+  </div>
   <button id="agent-open" type="button" aria-controls="agent-panel">🍊 에이전트와 채팅</button>
   <section id="agent-panel" aria-label="제주 특산물 에이전트 채팅">
     <div class="agent-head"><span>제주 특산물 에이전트</span><button id="agent-close" type="button" aria-label="채팅 닫기"><i></i><i></i></button></div>
@@ -850,6 +916,61 @@
     <p class="agent-fake">※ 지금 답변은 미리 정해 둔 가짜 답이에요.</p>
   </section>
 
+  <script>
+    // 📱🖥️ 모바일 / PC 보기 전환. 'auto'는 창 크기를 따르고, 눌러서 강제로 바꿀 수 있다.
+    (function () {
+      var btn = document.getElementById('view-toggle');
+      var meta = document.querySelector('meta[name="viewport"]');
+      var root = document.documentElement;
+      var AUTO_META = meta.getAttribute('content');
+      var mode = 'auto';
+      try { mode = localStorage.getItem('view-mode') || 'auto'; } catch (e) {}
+
+      function isMobile() {
+        if (mode === 'mobile') return true;
+        if (mode === 'pc') return false;
+        return window.innerWidth <= 760;
+      }
+      function apply() {
+        root.classList.toggle('force-m', mode === 'mobile');
+        // 휴대폰에서 PC 보기: 화면 폭을 1100px 로 잡아 PC 배치로 보여 준다
+        meta.setAttribute('content', mode === 'pc' ? 'width=1100' : AUTO_META);
+        btn.textContent = isMobile() ? '🖥️ PC 보기' : '📱 모바일 보기';
+      }
+      btn.addEventListener('click', function () {
+        mode = isMobile() ? 'pc' : 'mobile';
+        try { localStorage.setItem('view-mode', mode); } catch (e) {}
+        apply();
+      });
+      window.addEventListener('resize', apply);
+      apply();
+
+      // 모바일 판단: 레이아웃 영역(.page)이 760px 이하일 때 (강제 모바일 보기 포함)
+      var page = document.querySelector('.page');
+      function checkMobile() {
+        root.classList.toggle('mv', page.getBoundingClientRect().width <= 760);
+      }
+      if (window.ResizeObserver) new ResizeObserver(checkMobile).observe(page);
+      window.addEventListener('resize', checkMobile);
+      checkMobile();
+
+      // 아래쪽 주제 탭: 누른 주제만 보여 준다 (모바일에서만 적용됨)
+      var tabs = document.querySelectorAll('#tabbar button');
+      var panels = document.querySelectorAll('[data-tab]');
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          var go = t.getAttribute('data-go');
+          tabs.forEach(function (x) {
+            var on = x === t;
+            x.classList.toggle('on', on);
+            x.setAttribute('aria-selected', on ? 'true' : 'false');
+          });
+          panels.forEach(function (p) { p.classList.toggle('tab-active', p.getAttribute('data-tab') === go); });
+          window.scrollTo(0, 0);
+        });
+      });
+    })();
+  </script>
   <script src="faq.js"></script>
   <script>
     // 💬 에이전트 채팅: 버튼을 누르면 열린다. 답은 미리 정해 둔 츤데레 대사(가짜 답)다.
