@@ -744,9 +744,9 @@
     // 💬 에이전트 채팅: 버튼을 누르면 열리고, 답은 가짜 3개를 차례로 돌려 쓴다
     (function () {
       var REPLIES = [
-        '안녕하세요! 저는 제주도 특산물을 알아보는 에이전트예요 🍊\n감귤, 갈치, 흑돼지 중에 어떤 게 가장 궁금하세요?',
-        '처음이라면 한라봉·천혜향을 추천해요! 겨울부터 초봄까지가 제철이고, 선물용으로도 인기가 많아요 🍊',
-        '아직 공부 중이에요! 5일차에 진짜로 알아볼게요.'
+        '흥, 왔어? 별로 기다린 건 아니거든! 나는 제주 특산물 담당 에이전트야 🍊\n그래서, 감귤이랑 갈치, 흑돼지 중에 뭐가 궁금한 건데? 빨리 말해 봐!',
+        '어, 어쩔 수 없네. 특별히 알려 주는 거야. 한라봉이랑 천혜향 먹어 봐! 겨울부터 초봄이 제철이고 선물로도 인기 많으니까 🍊\n...딱히 너 생각해서 고른 건 아니거든!',
+        '아, 아직 공부 중이란 말이야! 5일차에 제대로 알아봐 줄 테니까 기다려. 바보... 딱히 기대해 달라는 건 아니거든!'
       ];
       var openBtn = document.getElementById('agent-open');
       var panel = document.getElementById('agent-panel');
@@ -779,7 +779,7 @@
         panel.classList.toggle('open', open);
         openBtn.classList.toggle('hidden', open);
         if (open) {
-          if (!greeted) { greeted = true; add('bot', '제주 특산물에 대해 무엇이든 물어보세요! 입력창에 쓰고 Enter를 눌러 보세요.'); }
+          if (!greeted) { greeted = true; add('bot', '흥, 제주 특산물이 궁금한 거야? 물어보고 싶으면 입력창에 쓰고 Enter를 눌러. 딱히 도와주고 싶어서 그런 건 아니거든!'); }
           input.focus();
         }
       }
