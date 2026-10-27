@@ -102,7 +102,7 @@
 <body>
   <main class="chat">
     <header>
-      <h1>🍊 제주 특산물 에이전트</h1>
+      <h1>제주 특산물 에이전트</h1>
       <p>제주도 특산물에 대해서 알아보는 기능</p>
     </header>
 
@@ -117,18 +117,77 @@
   </main>
 
   <script>
-    // 가짜 답 3개를 차례로 돌려 쓴다 (진짜 검색은 5일차에)
-    const REPLIES = [
-      '흥, 왔어? 별로 기다린 건 아니거든!\n감귤, 갈치, 흑돼지 중에 뭐가 궁금해?',
-      '특별히 알려 주는 거야. 한라봉 먹어 봐! 겨울이 제철이거든 🍊\n딱히 널 위해 고른 건 아니야!',
-      '아직 공부 중이란 말이야! 5일차에 알려 줄 테니까 기다려, 바보!',
-    ];
+    // 미리 정해 둔 츤데레 대사(가짜 답). t = 말투 종류, 같은 말투가 연달아 나오지 않게 고른다
+  var TOPICS = [
+    { re: /안녕|하이|ㅎㅇ|반가/, list: [
+      { t: 'huff', s: '뭐야, 인사부터? ...안녕. 별로 반가운 건 아니거든!' },
+      { t: 'shy', s: '왔구나. 기다린 건 아닌데... 심심하진 않았어.' },
+      { t: 'bossy', s: '왔으면 빨리 물어봐. 나도 바쁘거든!' } ] },
+    { re: /바보|멍청|싫어|못생/, list: [
+      { t: 'huff', s: '누가 바보야, 누가! 너나 잘해!' },
+      { t: 'bossy', s: '말버릇 고쳐. 안 그러면 안 알려 줄 거야!' },
+      { t: 'shy', s: '...그런 말 들으면 좀 속상하거든. 딱히 상처받은 건 아니지만!' } ] },
+    { re: /고마|좋아|최고|귀여|예뻐|이쁘/, list: [
+      { t: 'shy', s: '가, 갑자기 뭐야! 칭찬해도 아무것도 안 나와, 바보!' },
+      { t: 'huff', s: '고마워할 필요 없어. 당연한 거니까... 흥!' },
+      { t: 'proud', s: '내가 좀 대단하긴 하지. 인정해 줘서... 나쁘진 않네!' } ] },
+    { re: /감귤|귤|한라봉|천혜향|레드향/, list: [
+      { t: 'bossy', s: '감귤이면 겨울에 가. 직접 따 보면 맛이 달라, 알겠어?' },
+      { t: 'shy', s: '한라봉이 제일 맛있어... 딱히 내가 좋아하는 건 아니고!' },
+      { t: 'proud', s: '제주 감귤은 당도가 다르다고. 당연한 거지, 흥!' } ] },
+    { re: /갈치|옥돔|생선|회/, list: [
+      { t: 'proud', s: '은갈치는 반짝반짝한 게 신선한 거야. 그 정도는 알아 둬!' },
+      { t: 'care', s: '갈치조림 먹을 땐 가시 조심해. 걱정돼서가 아니라 귀찮아져서 그래!' },
+      { t: 'huff', s: '옥돔구이도 있거든? 갈치만 있는 줄 알았어? 흥!' } ] },
+    { re: /흑돼지|돼지|고기|삼겹/, list: [
+      { t: 'bossy', s: '흑돼지는 멜젓에 찍어 먹어. 이건 꼭 해 봐야 돼!' },
+      { t: 'shy', s: '두툼하게 구운 근고기... 맛있긴 하더라. 딱히 먹고 싶은 건 아니야!' },
+      { t: 'proud', s: '제주 흑돼지는 육즙이 달라. 내가 보증할게!' } ] },
+    { re: /선물|기념|오메기|초콜릿|택배/, list: [
+      { t: 'care', s: '선물이면 감귤 초콜릿이 가볍고 좋아. 받는 사람이 좋아하겠네... 부러운 건 아니야!' },
+      { t: 'bossy', s: '오메기떡도 챙겨. 쫀득해서 인기 많으니까!' },
+      { t: 'huff', s: '냉동 갈치는 택배로 보낼 수 있어. 그 정도도 몰랐어?' } ] },
+    { re: /어디|사려|구매|시장|체험|놀|여행/, list: [
+      { t: 'huff', s: '동문시장에 가 봐. 처음 가는 거면 길 잃지 말고!' },
+      { t: 'care', s: '겨울엔 귤 따기 체험도 있어. 같이... 아니, 혼자 가도 재밌을 거야!' },
+      { t: 'bossy', s: '체험은 예약해야 하는 곳이 많아. 미리미리 확인해!' } ] }
+  ];
+  var ANY = [
+    { t: 'huff', s: '아직 공부 중이란 말이야! 5일차에 알려 줄 테니까 기다려, 바보!' },
+    { t: 'shy', s: '그건... 아직 잘 몰라. 모른다고 말하는 거 싫은데... 곧 알아낼 거야!' },
+    { t: 'bossy', s: '질문이 애매해! 감귤, 갈치, 흑돼지 중에 골라서 다시 물어봐.' },
+    { t: 'care', s: '너무 어려운 건 묻지 마. 아직 공부 중이니까... 5일차에 다시 와!' },
+    { t: 'proud', s: '나한테 물어본 건 잘한 선택이야. 다만 그건 아직 준비 중이지만!' }
+  ];
+  var used = {};
+  var lastTone = '';
+
+  // 안 쓴 대사 중에서, 직전과 다른 말투를 우선해서 고른다
+  function pick(list, backup) {
+    var pool = list.filter(function (r) { return !used[r.s]; });
+    if (!pool.length) { list.forEach(function (r) { delete used[r.s]; }); pool = list.slice(); }
+    var diff = pool.filter(function (r) { return r.t !== lastTone; });
+    if (!diff.length && backup) {
+      diff = backup.filter(function (r) { return !used[r.s] && r.t !== lastTone; });
+    }
+    if (diff.length) pool = diff;
+    var r = pool[Math.floor(Math.random() * pool.length)];
+    used[r.s] = true;
+    lastTone = r.t;
+    return r.s;
+  }
+
+  function reply(text) {
+    for (var i = 0; i < TOPICS.length; i++) {
+      if (TOPICS[i].re.test(text)) return pick(TOPICS[i].list, ANY);
+    }
+    return pick(ANY);
+  }
     const REPLY_DELAY = 1000;
 
     const log = document.getElementById('log');
     const form = document.getElementById('form');
     const input = document.getElementById('msg');
-    let replyCount = 0;
 
     function addRow(who, text) {
       const row = document.createElement('div');
@@ -159,8 +218,7 @@
       typing.querySelector('.bubble').classList.add('typing');
       setTimeout(() => {
         typing.remove();
-        addRow('bot', REPLIES[replyCount % REPLIES.length]);
-        replyCount++;
+        addRow('bot', reply(text));
       }, REPLY_DELAY);
     });
 
