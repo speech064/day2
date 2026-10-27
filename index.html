@@ -512,6 +512,32 @@
     }
     #view-toggle:hover { background: var(--pink); }
 
+    /* ⭕ 리액티브 페이지로 가는 원형 버튼 (왼쪽 아래, 모드 전환 버튼 위) */
+    #go-reactive {
+      position: fixed;
+      left: 10px;
+      bottom: 46px;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      color: var(--brown);
+      text-decoration: none;
+      line-height: 1.1;
+      background: var(--orange);
+      border: 3px solid var(--brown);
+      border-radius: 50%;
+      box-shadow: 3px 3px 0 rgba(75, 42, 36, 0.3);
+      transition: transform 0.15s;
+    }
+    #go-reactive:hover { transform: scale(1.08); background: #ffb85c; }
+    #go-reactive .ic { font-size: 1.3rem; }
+    #go-reactive .tx { font-size: 0.58rem; font-weight: bold; }
+    html.mv #go-reactive { bottom: calc(104px + env(safe-area-inset-bottom)); }
+
     /* 📑 모바일: 위쪽 가로 메뉴는 빼고, 아래쪽 주제 탭으로 한 번에 한 주제만 보여 준다 */
     #tabbar {
       position: fixed;
@@ -909,6 +935,7 @@
     query = qInput.value.trim();
     search(1);  </script>
 
+  <a id="go-reactive" href="reactive.html" aria-label="리액티브 페이지로 이동" title="리액티브 페이지"><span class="ic">📚</span><span class="tx">리액티브</span></a>
   <button id="view-toggle" type="button">📱 모바일 보기</button>
   <div id="tabbar" role="tablist" aria-label="주제 탭">
     <button type="button" role="tab" data-go="photos" class="on">📷<span>사진 검색</span></button>
