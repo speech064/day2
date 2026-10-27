@@ -447,9 +447,10 @@
       scrollbar-width: thin;
       scrollbar-color: #e8b98a transparent;
     }
-    .arow { display: flex; align-items: flex-end; gap: 6px; }
+    .arow { display: flex; align-items: flex-end; gap: 8px; }
+    .arow.bot { align-items: flex-start; padding-right: 14px; }   /* 오른쪽에 살짝 여유를 남겨 대화상자가 벽에 붙지 않게 */
     .arow.me { justify-content: flex-end; }
-    .arow .av { flex: none; width: 34px; height: auto; mix-blend-mode: multiply; }
+    .arow .av { flex: none; width: 54px; height: auto; mix-blend-mode: multiply; }
     .abubble {
       max-width: 78%;
       padding: 0.55rem 0.9rem;
@@ -463,9 +464,12 @@
       animation: apop 0.2s ease-out;
     }
     .arow.bot .abubble {
+      flex: 1;           /* 요정 옆에서 오른쪽까지 이어지는 대화상자 */
+      max-width: none;
+      min-width: 0;
       background: #fff;
       border: 1.5px solid #e9cdb4;
-      border-bottom-left-radius: 5px;
+      border-top-left-radius: 5px;
     }
     .arow.me .abubble {
       color: #fff;
@@ -473,6 +477,7 @@
       border: 1.5px solid var(--pink-d);
       border-bottom-right-radius: 5px;
     }
+    .arow.typing .abubble { flex: none; }   /* 입력 중 "…" 은 짧게 */
     @keyframes apop { from { opacity: 0; transform: translateY(6px); } }
     #agent-form { display: flex; gap: 6px; padding: 0 12px 6px; }
     #agent-input {
@@ -1117,6 +1122,7 @@
         add('me', text);
         input.value = '';
         var typing = add('bot', '…');
+        typing.classList.add('typing');
         setTimeout(function () {
           typing.remove();
           add('bot', reply(text));
