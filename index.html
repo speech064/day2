@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카운터</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    #count {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    #buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    button {
+      font-size: 1.25rem;
+      padding: 0.5rem 1.5rem;
+      cursor: pointer;
+    }
+    .good { background: #ffe58a; }
+    .bad  { background: #ffb3b3; }
+    #msg {
+      margin-top: 1rem;
+      height: 1.5rem;
+      font-size: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="count">0</div>
+  <div id="buttons"></div>
+  <div id="msg"></div>
+  <script>
+    /*
+     * [동작 방식]
+     * 1. 평소에는 +5 버튼만 보인다.
+     * 2. 보이지 않는 "목표 클릭 수"(1~10 랜덤)가 있고, 클릭이 그 횟수에 도달하면
+     *    랜덤 인카운트(찬스)가 발생한다.
+     * 3. 인카운트는 55% 확률로 "찬스"(+5 버튼 + +50 버튼 중 선택),
+     *    45% 확률로 "꽝"(- 버튼만 나타남)이다.
+     * 4. 사용자가 버튼을 하나 고르면 인카운트가 끝나고,
+     *    클릭 수와 목표 클릭 수가 초기화되어 다시 1~10 중 랜덤으로 정해진다.
+     */
+    const NORMAL = 5;        // 평소 증가량
+    const CHANCE = [50, 100];       // 찬스 버튼 증가량
+    const BAD = [-5, -10];   // 꽝일 때 나오는 감소 버튼들
+    const BAD_RATE = 0.45;    // 꽝 확률 45%
+
+    let count = 0;
+    const el = document.getElementById('count');
+    const msg = document.getElementById('msg');
+    const buttons = document.getElementById('buttons');
+
+    const rollTarget = () => Math.floor(Math.random() * 10) + 1;
+    let target = rollTarget();
+    let clicks = 0;
+
+    // 숫자 변경 (0 미만으로는 내려가지 않음)
+    function add(amount) {
+      count = Math.max(0, count + amount);
+      el.textContent = count;
+    }
+
+    // 버튼 하나 만들기
+    function makeButton(amount, className) {
+      const b = document.createElement('button');
+      b.textContent = (amount > 0 ? '+' : '') + amount;
+      if (className) b.className = className;
+      b.addEventListener('click', () => choose(amount));
+      return b;
+    }
+
+    // 버튼 영역 다시 그리기. options가 없으면 평소 상태(+5만)
+    function render(options) {
+      buttons.replaceChildren(...(options || [makeButton(NORMAL)]));
+    }
+
+    // 클릭 처리: 평소 버튼이든 찬스 버튼이든 여기로 들어온다
+    let inEncounter = false;
+    function choose(amount) {
+      add(amount);
+
+      if (inEncounter) {
+        // 인카운트 중 선택 완료 -> 초기화 후 평소 상태로
+        inEncounter = false;
+        clicks = 0;
+        target = rollTarget();
+        msg.textContent = '';
+        render();
+        return;
+      }
+
+      clicks++;
+      if (clicks === target) startEncounter();
+    }
+
+    // 랜덤 인카운트 시작
+    function startEncounter() {
+      inEncounter = true;
+      if (Math.random() < BAD_RATE) {
+        msg.textContent = '💀 꽝! 하나를 골라야 합니다...';
+        render(BAD.map(n => makeButton(n, 'bad')));
+      } else {
+        msg.textContent = '🎉 찬스! 선택하세요';
+        render([makeButton(NORMAL), ...CHANCE.map(n => makeButton(n, 'good'))]);
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
