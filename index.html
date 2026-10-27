@@ -962,7 +962,8 @@
       var root = document.documentElement;
       var AUTO_META = meta.getAttribute('content');
       var mode = 'auto';
-      try { mode = localStorage.getItem('view-mode') || 'auto'; } catch (e) {}
+      // 전환은 이번 화면에서만 적용한다. 예전에 저장된 값이 있으면 지워서, 열 때마다 기기 크기를 따르게 한다.
+      try { localStorage.removeItem('view-mode'); } catch (e) {}
 
       function isMobile() {
         if (mode === 'mobile') return true;
@@ -977,7 +978,6 @@
       }
       btn.addEventListener('click', function () {
         mode = isMobile() ? 'pc' : 'mobile';
-        try { localStorage.setItem('view-mode', mode); } catch (e) {}
         apply();
       });
       window.addEventListener('resize', apply);

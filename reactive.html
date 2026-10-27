@@ -145,6 +145,31 @@
       cursor: pointer;
     }
 
+    /* ⭕ 인덱스로 돌아가는 원형 버튼 */
+    .go-index {
+      position: fixed;
+      left: 14px;
+      bottom: 14px;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      color: #fff;
+      text-decoration: none;
+      line-height: 1.1;
+      background: var(--accent);
+      border: 3px solid var(--navy);
+      border-radius: 50%;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s;
+    }
+    .go-index:hover { transform: scale(1.08); }
+    .go-index .ic { font-size: 1.3rem; }
+    .go-index .tx { font-size: 0.62rem; font-weight: bold; }
+
     footer { padding: 18px 16px; text-align: center; font-size: 0.85rem; color: var(--muted); }
 
     /* 📱 모바일: 가로 메뉴 대신 햄버거 → 아래로 펼쳐지는 메뉴 */
@@ -247,6 +272,8 @@
       <div class="map-box">🗺️ 지도 영역 (검색하면 새 창에서 열려요)</div>
     </section>
   </main>
+
+  <a class="go-index" href="index.html" aria-label="인덱스 페이지로 이동" title="인덱스 페이지"><span class="ic">🏝️</span><span class="tx">인덱스</span></a>
 
   <footer>© 반응형 메뉴 예제 · PC는 가로 메뉴, 모바일은 햄버거 메뉴</footer>
 
